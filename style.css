@@ -4,81 +4,195 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Felelsz vagy Iszol</title>
-  <link rel="stylesheet" href="style.css" />
   <style>
+    /* TEST és ALAPOK */
     body {
-      background-color: #0d0d0d;
-      color: #ffffff;
-      font-family: 'Segoe UI', sans-serif;
       margin: 0;
-      padding: 0;
+      height: 100vh;
+      background: black;
+      overflow: hidden;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #e0d7ff; /* halvány neon lila */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at center, #330066, #000000 70%);
+      position: relative;
     }
 
+    /* HÁTTÉR MOZGÓ CSÍKOK */
+    body::before, body::after {
+      content: "";
+      position: fixed;
+      width: 200%;
+      height: 200%;
+      top: -50%;
+      left: -50%;
+      pointer-events: none;
+      z-index: 1;
+      background:
+        repeating-linear-gradient(
+          45deg,
+          transparent,
+          transparent 10px,
+          rgba(182,76,255,0.1) 10px,
+          rgba(182,76,255,0.1) 20px
+        );
+      animation: moveBackground 30s linear infinite;
+      opacity: 0.2;
+    }
+
+    body::after {
+      background:
+        repeating-linear-gradient(
+          -45deg,
+          transparent,
+          transparent 15px,
+          rgba(255,115,0,0.15) 15px,
+          rgba(255,115,0,0.15) 30px
+        );
+      animation-direction: reverse;
+      opacity: 0.15;
+    }
+
+    @keyframes moveBackground {
+      0% { background-position: 0 0; }
+      100% { background-position: 1000px 1000px; }
+    }
+
+    /* KONTAINER */
     .container {
-      max-width: 600px;
-      margin: 40px auto;
-      padding: 20px;
-      background-color: #1a1a1a;
+      background: rgba(25, 0, 50, 0.85);
       border-radius: 15px;
-      box-shadow: 0 0 20px #ff00ff80;
+      padding: 25px 30px;
+      box-shadow:
+        0 0 15px #ff7300,
+        0 0 40px #a64400,
+        0 0 60px #aa6600;
+      width: 90%;
+      max-width: 600px;
       text-align: center;
+      border: 2px solid #b64cff; /* neon lila keret */
+      position: relative;
+      z-index: 10;
     }
 
+    /* CÍM */
     h1 {
-      color: #ff00ff;
-      text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
+      color: #b64cff;
+      text-shadow:
+        0 0 5px #b64cff,
+        0 0 10px #ff7300,
+        0 0 20px #b64cff;
+      font-weight: 700;
+      font-size: 2.8rem;
+      margin-bottom: 15px;
+      animation: neonGlow 3s ease-in-out infinite;
     }
 
-    label, input, button, p, h2 {
+    @keyframes neonGlow {
+      0% {
+        text-shadow:
+          0 0 5px #b64cff,
+          0 0 10px #ff7300,
+          0 0 15px #b64cff;
+      }
+      50% {
+        text-shadow:
+          0 0 20px #ff7300,
+          0 0 40px #b64cff,
+          0 0 60px #ff7300;
+      }
+      100% {
+        text-shadow:
+          0 0 5px #b64cff,
+          0 0 10px #ff7300,
+          0 0 15px #b64cff;
+      }
+    }
+
+    /* INPUTOK, LABEL, P, H2 */
+    label, input, p, h2 {
       margin: 10px 0;
       display: block;
       width: 100%;
+      color: #d1baff;
+      font-weight: 600;
+      text-shadow: 0 0 5px #b64cff99;
     }
 
     input {
-      padding: 10px;
-      font-size: 16px;
-      border: none;
-      border-radius: 5px;
-      background-color: #2a2a2a;
-      color: #fff;
-    }
-
-    button {
-      padding: 12px;
-      margin: 10px 5px;
-      background-color: #ff8000;
-      color: white;
-      border: none;
+      padding: 12px 15px;
+      font-size: 1rem;
       border-radius: 8px;
-      font-size: 16px;
+      border: 2px solid #b64cff;
+      background-color: #1a0033;
+      color: #e0d7ff;
+      box-shadow: inset 0 0 5px #b64cff;
+      transition: border-color 0.3s ease;
+      max-width: 100%;
+    }
+
+    input:focus {
+      border-color: #ff7300;
+      outline: none;
+      box-shadow: 0 0 10px #ff7300;
+    }
+
+    /* GOMBOK */
+    button {
+      background-color: #ff7300;
+      border: none;
+      padding: 14px 28px;
+      margin: 10px 6px;
+      font-size: 1.1rem;
+      border-radius: 12px;
       cursor: pointer;
-      transition: 0.3s ease;
-      box-shadow: 0 0 10px #ff800080;
+      font-weight: 600;
+      color: #fff;
+      box-shadow:
+        0 0 10px #ff7300,
+        0 0 20px #b64cff;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      user-select: none;
+      max-width: 100%;
+      display: inline-block;
     }
 
-    button:hover {
-      background-color: #ffa733;
-      box-shadow: 0 0 15px #ff8000;
+    button:hover, button:focus {
+      background-color: #b64cff;
+      box-shadow:
+        0 0 15px #b64cff,
+        0 0 30px #ff7300;
+      color: #fff;
+      outline: none;
     }
 
+    /* GOMB SOR */
     .button-row {
       display: flex;
       justify-content: center;
-      gap: 10px;
+      gap: 15px;
+      flex-wrap: wrap;
     }
 
+    /* EREDMÉNY */
     #eredmeny {
-      font-size: 18px;
+      font-size: 1.3rem;
       margin-top: 20px;
-      color: #ff00ff;
-      text-shadow: 0 0 10px #ff00ff;
+      color: #b64cff;
+      text-shadow: 0 0 10px #b64cff;
+      min-height: 3rem;
     }
 
+    /* FOOTER */
     footer {
-      margin-top: 30px;
-      font-size: 14px;
-      color: #999;
+      margin-top: 35px;
+      font-size: 0.85rem;
+      color: #aa7300;
+      text-shadow: 0 0 3px #aa7300;
     }
   </style>
 </head>
