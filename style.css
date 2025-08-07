@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Felelsz vagy Iszol</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background-color: #0d0d0d;
+      color: #ffffff;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #1a1a1a;
+      border-radius: 15px;
+      box-shadow: 0 0 20px #ff00ff80;
+      text-align: center;
+    }
+
+    h1 {
+      color: #ff00ff;
+      text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
+    }
+
+    label, input, button, p, h2 {
+      margin: 10px 0;
+      display: block;
+      width: 100%;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      background-color: #2a2a2a;
+      color: #fff;
+    }
+
+    button {
+      padding: 12px;
+      margin: 10px 5px;
+      background-color: #ff8000;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s ease;
+      box-shadow: 0 0 10px #ff800080;
+    }
+
+    button:hover {
+      background-color: #ffa733;
+      box-shadow: 0 0 15px #ff8000;
+    }
+
+    .button-row {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    #eredmeny {
+      font-size: 18px;
+      margin-top: 20px;
+      color: #ff00ff;
+      text-shadow: 0 0 10px #ff00ff;
+    }
+
+    footer {
+      margin-top: 30px;
+      font-size: 14px;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Felelsz vagy Iszol 🥳</h1>
+
+    <div class="input-section">
+      <label for="jatekosok">Játékosok (vesszővel):</label>
+      <input type="text" id="jatekosok" placeholder="Anna, Bence, Csilla" />
+      <button onclick="inditas()">Játék indítása</button>
+    </div>
+
+    <div id="jatek" class="game-section" style="display:none;">
+      <h2 id="aktualisJatekos"></h2>
+      <p>Felelsz vagy iszol?</p>
+      <div class="button-row">
+        <button onclick="valasztott('F')">Felelek</button>
+        <button onclick="valasztott('I')">Iszom</button>
+      </div>
+      <p id="eredmeny"></p>
+      <button onclick="kovetkezo()">Következő játékos</button>
+    </div>
+
+    <footer>Készítette: <strong>Nova</strong></footer>
+  </div>
+
+  <script>
+    let jatekosLista = [];
+    let jelenlegiIndex = 0;
+    let kerdesek = [];
+
+    async function inditas() {
+      const input = document.getElementById("jatekosok").value;
+      jatekosLista = input.split(",").map(n => n.trim()).filter(n => n);
+      if (jatekosLista.length === 0) return alert("Adj meg legalább egy játékost!");
+
+      kerdesek = await kerdeseketBetolt();
+      if (kerdesek.length === 0) return alert("Nem sikerült betölteni a kérdéseket.");
+
+      document.querySelector(".input-section").style.display = "none";
+      document.getElementById("jatek").style.display = "block";
+      jelenlegiIndex = 0;
+      megjelenitJatekost();
+    }
+
+    async function kerdeseketBetolt() {
+      try {
+        const res = await fetch("kerdesek.txt");
+        const text = await res.text();
+        return text.split("\n").map(s => s.trim()).filter(s => s);
+      } catch (err) {
+        console.error("Hiba a kerdesek betoltesenel", err);
+        return [];
+      }
+    }
+
+    function megjelenitJatekost() {
+      document.getElementById("eredmeny").textContent = "";
+      const jatekos = jatekosLista[jelenlegiIndex];
+      document.getElementById("aktualisJatekos").textContent = `${jatekos} következik!`;
+    }
+
+    function valasztott(valasztas) {
+      const eredmeny = document.getElementById("eredmeny");
+      if (valasztas === "F") {
+        const kerdes = kerdesek[Math.floor(Math.random() * kerdesek.length)];
+        eredmeny.textContent = `Kérdés: ${kerdes}`;
+      } else {
+        eredmeny.textContent = "Igyál egyet! 🍻";
+      }
+    }
+
+    function kovetkezo() {
+      jelenlegiIndex = (jelenlegiIndex + 1) % jatekosLista.length;
+      megjelenitJatekost();
+    }
+  </script>
+</body>
+</html>
